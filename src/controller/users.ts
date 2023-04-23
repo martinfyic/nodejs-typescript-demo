@@ -1,18 +1,33 @@
 import { Request, Response } from 'express';
+import User from '../models/user';
 
-export const getUsers = (req: Request, res: Response) => {
-	res.json({
+export const getUsers = async (req: Request, res: Response) => {
+	const users = await User.findAll();
+
+	return res.status(200).json({
 		status: 'OK',
-		msg: 'getUsers',
+		msg: 'Users in DB',
+		data: users,
 	});
 };
 
-export const getUser = (req: Request, res: Response) => {
+export const getUser = async (req: Request, res: Response) => {
 	const { id } = req.params;
-	res.json({
+
+	const user = await User.findByPk(id);
+
+	if (!user) {
+		return res.status(404).json({
+			status: 'Not found',
+			msg: `User id: ${id} not found in DB`,
+			data: user,
+		});
+	}
+
+	return res.status(200).json({
 		status: 'OK',
-		msg: 'getUser',
-		userId: id,
+		msg: `User id: ${id}`,
+		data: user,
 	});
 };
 

@@ -5,7 +5,7 @@ import {
 	postUser,
 	putUser,
 	deleteUser,
-} from '../controller/usuarios';
+} from '../controller/users';
 
 const usersRouter = Router();
 
