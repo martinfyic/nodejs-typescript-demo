@@ -1,20 +1,35 @@
 import cors from 'cors';
 import express from 'express';
-import userRouter from '../routes/usuarios';
+import userRouter from '../routes/users';
+import db from '../database/connection';
 
 class Server {
 	private app: express.Application;
 	private PORT: string | number;
-	private apiV1path = {
-		users: '/api/v1/users',
+	private apiPath = {
+		v1: {
+			users: '/api/v1/users',
+		},
 	};
 
 	constructor() {
 		this.app = express();
 		this.PORT = process.env.PORT || 3000;
 
+		this.dbConnection();
 		this.middlewares();
 		this.routes();
+	}
+
+	async dbConnection(): Promise<void> {
+		try {
+			await db.authenticate();
+			console.log(
+				`===> 💿 Database is online - ⌚ - ${new Date().toLocaleString()}`
+			);
+		} catch (error: unknown) {
+			throw new Error(error as string);
+		}
 	}
 
 	middlewares() {
@@ -28,13 +43,13 @@ class Server {
 	}
 
 	routes() {
-		this.app.use(this.apiV1path.users, userRouter);
+		this.app.use(this.apiPath.v1.users, userRouter);
 	}
 
 	listen() {
 		this.app.listen(this.PORT, () => {
 			console.log(
-				`🚀 Server ready on: http://localhost:${
+				`===> 🚀 Server ready on: http://localhost:${
 					this.PORT
 				} - ⌚ - ${new Date().toLocaleString()}`
 			);
