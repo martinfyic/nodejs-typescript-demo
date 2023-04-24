@@ -8,7 +8,7 @@ const databaseUrl = process.env.DB_HOST ?? 'database-url';
 const db = new Sequelize(databaseName, databaseUser, databasePassword, {
 	host: databaseUrl,
 	dialect: 'mysql',
-	// logging: false,
+	logging: false, // ==> para no mostrar las queris por consolas
 });
 
 export default db;
